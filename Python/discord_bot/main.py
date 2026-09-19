@@ -15,6 +15,8 @@ intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix='!', intents=intents)
 
+
+
 @bot.command()
 async def somar(ctx, a: int, b: int):
     resultado = math_c.somar_em_c(a, b)
@@ -31,8 +33,8 @@ async def dividir(ctx, a: int, b: int):
     await ctx.send(f"Calculado: a divisão de {a} por {b} é: **{resultado}**")
 
 @bot.command()
-async def modulo(ctx, a: int, b: int):
-    resultado = math_c.modulom_em_c(a, b)
+async def resto(ctx, a: int, b: int):
+    resultado = math_c.resto_em_c(a, b)
     await ctx.send(f"Calculado: o resto da divisão de {a} por {b} é: **{resultado}**")
 
 @bot.command()
