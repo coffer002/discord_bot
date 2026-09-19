@@ -1,0 +1,6 @@
+#ifndef BOT_ENGINE_MATH_LIBRARY_H
+#define BOT_ENGINE_MATH_LIBRARY_H
+
+void hello(void);
+
+#endif // BOT_ENGINE_MATH_LIBRARY_H

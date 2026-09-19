@@ -1,0 +1,13 @@
+# Ignorar arquivos do C
+*.o
+*.out
+*.exe
+*.dll
+*.so
+
+# Ignorar arquivos do Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.env
