@@ -4,20 +4,24 @@
 #define EXPORT
 #endif
 
-EXPORT int somar_em_c(int a, int b) {
+EXPORT long double somar_em_c(long double a, long double b) {
     return a + b;
 }
-EXPORT int multiplicar_em_c(int a, int b) {
+
+EXPORT long double multiplicar_em_c(long double a, long double b) {
     return a * b;
 }
-EXPORT int dividir_em_c(int a, int b) {
+
+EXPORT long double dividir_em_c(long double a, long double b) {
     return a / b;
 }
+
 EXPORT int modulom_em_c(int a, int b) {
     return a % b;
 }
-EXPORT int potencia_c(int a, int b) {
-    int result = 1;
+
+EXPORT long double potencia_c(long double a, int b) {
+    long double result = 1.0;
     for (int i = 1; i <= b; i++) {
         result *= a;
     }
