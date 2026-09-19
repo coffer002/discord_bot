@@ -10,7 +10,7 @@ secrets.json
 # ========================================
 # Caches
 __pycache__/
-*.py[cod]
+
 *$py.class
 
 # Ambientes Virtuais
