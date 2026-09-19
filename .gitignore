@@ -1,13 +1,71 @@
-# Ignorar arquivos do C
+# ========================================
+# Segurança e Segredos (MUITO IMPORTANTE)
+# ========================================
+.env
+*.env
+secrets.json
+
+# ========================================
+# Python
+# ========================================
+# Caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ambientes Virtuais
+venv/
+.venv/
+env/
+.env/
+.idea/
+
+# Logs e outros
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+
+# ========================================
+# C / C++ e CMake
+# ========================================
+# Diretórios de build do CLion/CMake (como o seu cmake-build-debug)
+cmake-build-*/
+build/
+
+# Arquivos gerados pelo CMake
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+.cmake/
+
+# Arquivos compilados e binários
 *.o
+*.obj
 *.out
 *.exe
 *.dll
 *.so
+*.a
+*.lib
 
-# Ignorar arquivos do Python
-__pycache__/
-*.pyc
-*.pyo
-venv/
-.env
+# ========================================
+# IDEs e Editores
+# ========================================
+# JetBrains (CLion, PyCharm - inclui a sua pasta .idea)
+.idea/
+*.iml
+cmake-build-*/
+
+# VS Code
+.vscode/
+
+# ========================================
+# Sistema Operacional (Windows / Mac)
+# ========================================
+Thumbs.db
+Desktop.ini
+.DS_Store
