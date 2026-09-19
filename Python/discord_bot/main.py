@@ -15,31 +15,39 @@ intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix='!', intents=intents)
 
-
-
+#a
 @bot.command()
-async def somar(ctx, a: int, b: int):
-    resultado = math_c.somar_em_c(a, b)
+async def somar(ctx, a: float, b: float):
+    resultado = math_c.somar_em_c(ctypes.c_longdouble(a), ctypes.c_longdouble(b))
     await ctx.send(f"Calculado: a soma de {a} e {b} é: **{resultado}**")
 
 @bot.command()
-async def multiplicar(ctx, a: int, b: int):
-    resultado = math_c.multiplicar_em_c(a, b)
+async def multiplicar(ctx, a: float, b: float):
+    resultado = math_c.multiplicar_em_c(ctypes.c_longdouble(a), ctypes.c_longdouble(b))
     await ctx.send(f"Calculado: a multiplicação de {a} e {b} é: **{resultado}**")
 
 @bot.command()
-async def dividir(ctx, a: int, b: int):
-    resultado = math_c.dividir_em_c(a, b)
-    await ctx.send(f"Calculado: a divisão de {a} por {b} é: **{resultado}**")
+async def dividir(ctx, a: float, b: float):
+    if b != 0:
+        resultado = math_c.dividir_em_c(ctypes.c_longdouble(a), ctypes.c_longdouble(b))
+        await ctx.send(f"Calculado: a divisão de {a} por {b} é: **{resultado}**")
+    else:
+        ctx.send("Erro matematico div /0")
+
 
 @bot.command()
-async def resto(ctx, a: int, b: int):
-    resultado = math_c.resto_em_c(a, b)
+async def resto(ctx, a: float, b: int):
+    resultado = math_c.resto_em_c(ctypes.c_longdouble(a), ctypes.c_int(b))
     await ctx.send(f"Calculado: o resto da divisão de {a} por {b} é: **{resultado}**")
 
 @bot.command()
-async def potencia(ctx, a: int, b: int):
-    resultado = math_c.potencia_c(a, b)
+async def modulo(ctx, a: float):
+    resultado = math_c.modulo_em_c(ctypes.c_longdouble(a))
+    await ctx.send(f"Calculado: o módulo de {a} é: **{resultado}**")
+
+@bot.command()
+async def potencia(ctx, a: float, b: int):
+    resultado = math_c.potencia_c(ctypes.c_longdouble(a), ctypes.c_int(b))
     await ctx.send(f"Calculado: a potência de {a} elevado a {b} é: **{resultado}**")
 
 @bot.event
