@@ -167,17 +167,33 @@ async def on_message(message):
         conteudo = message.content.lower()
         print("DEBUG: Verificando padrões regex na mensagem natural...")
 
+        operadores_simbolos = {
+            '+': 'somar',
+            '*': 'multiplicar',
+            '/': 'dividir',
+            '%': 'resto',
+            '^': 'potencia'
+        }
+
+        match_simbolo = re.search(r'([-+]?[a-z0-9.]+)\s*(\+|\*|\/|\%|\^)\s*([-+]?[a-z0-9.]+)', conteudo)
+        if match_simbolo:
+            a, op, b = match_simbolo.groups()
+            cmd = operadores_simbolos[op]
+            print(f"DEBUG: Padrão de símbolo matemático detectado. Operação: {cmd} ({op}), Args: [{a}, {b}]")
+            await processar_comando_math(message.channel, cmd, [a, b])
+            return
+
         match_2_args = re.search(r'\b(somar|multiplicar|dividir|resto|potencia|log)\s+([^\s]+)\s+([^\s]+)', conteudo)
         if match_2_args:
             cmd, a, b = match_2_args.groups()
-            print(f"DEBUG: Padrão de 2 argumentos detectado. Comando: {cmd}, Args: [{a}, {b}]")
+            print(f"DEBUG: Padrão de 2 argumentos por texto detectado. Comando: {cmd}, Args: [{a}, {b}]")
             await processar_comando_math(message.channel, cmd, [a, b])
             return
 
         match_1_arg = re.search(r'\b(modulo)\s+([^\s]+)', conteudo)
         if match_1_arg:
             cmd, a = match_1_arg.groups()
-            print(f"DEBUG: Padrão de 1 argumento detectado. Comando: {cmd}, Arg: [{a}]")
+            print(f"DEBUG: Padrão de 1 argumento por texto detectado. Comando: {cmd}, Arg: [{a}]")
             await processar_comando_math(message.channel, cmd, [a])
             return
 
