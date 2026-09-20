@@ -18,12 +18,14 @@ math_c = ctypes.CDLL(path_math_c)
 
 print("DEBUG: Configurando tipos de retorno da DLL...")
 math_c.somar_em_c.restype = ctypes.c_double
+math_c.subtrair_em_c.restype = ctypes.c_double
 math_c.multiplicar_em_c.restype = ctypes.c_double
 math_c.dividir_em_c.restype = ctypes.c_double
 math_c.resto_em_c.restype = ctypes.c_double
 math_c.modulo_em_c.restype = ctypes.c_double
 math_c.potencia_em_c.restype = ctypes.c_double
 math_c.log_em_c.restype = ctypes.c_double
+
 
 print("DEBUG: Configurando Intents do Discord...")
 intents = discord.Intents.default()
@@ -56,6 +58,14 @@ async def processar_comando_math(channel, operacao: str, args: list):
             print(f"DEBUG: Executando função em C: somar_em_c({val_a}, {val_b})")
             resultado = math_c.somar_em_c(ctypes.c_double(val_a), ctypes.c_double(val_b))
             print(f"DEBUG: Operação somar concluída. Resultado: {resultado}")
+            await channel.send(f"Calculado: a soma de {a} e {b} é: **{resultado:.10f}**")
+
+        elif operacao == "subtrair":
+            a, b = args[0], args[1]
+            val_a, val_b = parse_constante(a), parse_constante(b)
+            print(f"DEBUG: Executando função em C: subtrair_em_c({val_a}, {val_b})")
+            resultado = math_c.subtrair_em_c(ctypes.c_double(val_a), ctypes.c_double(val_b))
+            print(f"DEBUG: Operação subtrair concluída. Resultado: {resultado}")
             await channel.send(f"Calculado: a soma de {a} e {b} é: **{resultado:.10f}**")
 
         elif operacao == "multiplicar":
@@ -176,6 +186,11 @@ async def somar(ctx, a: str, b: str):
     await processar_comando_math(ctx.channel, "somar", [a, b])
 
 @bot.command()
+async def subtrair(ctx, a: str, b: str):
+    print(f"DEBUG: Comando prefixado '!subtrair' invocado no canal {ctx.channel.id}")
+    await processar_comando_math(ctx.channel, "subtrair", [a, b])
+
+@bot.command()
 async def multiplicar(ctx, a: str, b: str):
     print(f"DEBUG: Comando prefixado '!multiplicar' invocado no canal {ctx.channel.id}")
     await processar_comando_math(ctx.channel, "multiplicar", [a, b])
@@ -246,13 +261,14 @@ async def on_message(message):
 
         operadores_simbolos = {
             '+': 'somar',
+            '-': 'subtrair',
             '*': 'multiplicar',
             '/': 'dividir',
             '%': 'resto',
             '^': 'potencia'
         }
 
-        match_simbolo = re.search(r'([-+]?[a-z0-9.]+)\s*(\+|\*|\/|\%|\^)\s*([-+]?[a-z0-9.]+)', conteudo)
+        match_simbolo = re.search(r'([-+]?[a-z0-9.]+)\s*(\+|\-|\*|\/|\%|\^)\s*([-+]?[a-z0-9.]+)', conteudo)
         if match_simbolo:
             a, op, b = match_simbolo.groups()
             cmd = operadores_simbolos[op]

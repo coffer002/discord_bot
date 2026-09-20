@@ -36,6 +36,10 @@ EXPORT double somar_em_c(double a, double b) {
     return a + b;
 }
 
+EXPORT double subtrair_em_c(double a, double b) {
+    return a - b;
+}
+
 EXPORT double multiplicar_em_c(double a, double b) {
     return a * b;
 }
