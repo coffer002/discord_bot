@@ -103,6 +103,15 @@ async def processar_comando_math(channel, operacao: str, args: list):
             print(f"DEBUG: Operação potencia concluída. Resultado: {resultado}")
             await channel.send(f"Calculado: a potência de {a} elevado a {b} é: **{resultado}**")
 
+        elif operacao == "raiz":
+            a, b = args[0], args[1]
+            val_a, val_b = parse_constante(a), parse_constante(b)
+            val_c = 1 / val_b
+            print(f"DEBUG: Executando função em C: potencia_c({val_a}, {val_c}), onde {val_c} = 1 / {val_b}")
+            resultado = math_c.potencia_c(ctypes.c_double(val_a), ctypes.c_double(val_c))
+            print(f"DEBUG: Operação potencia concluída. Resultado: {resultado}")
+            await channel.send(f"Calculado: a raiz {b}-ésima de {a} é: **{resultado}**")
+
         elif operacao == "log":
             a, b = args[0], args[1]
             val_a, val_b = parse_constante(a), parse_constante(b)
@@ -171,6 +180,11 @@ async def potencia(ctx, a: str, b: str):
     await processar_comando_math(ctx.channel, "potencia", [a, b])
 
 @bot.command()
+async def raiz(ctx, a: str, b: str):
+    print(f"DEBUG: Comando prefixado '!raiz' invocado no canal {ctx.channel.id}")
+    await processar_comando_math(ctx.channel, "raiz", [a, b])
+
+@bot.command()
 async def log(ctx, a: str, b: str):
     print(f"DEBUG: Comando prefixado '!log' invocado no canal {ctx.channel.id}")
     await processar_comando_math(ctx.channel, "log", [a, b])
@@ -214,7 +228,7 @@ async def on_message(message):
             await processar_comando_math(message.channel, cmd, [a, b])
             return
 
-        match_2_args = re.search(r'\b(somar|multiplicar|dividir|resto|potencia|log)\s+([^\s]+)\s+([^\s]+)', conteudo)
+        match_2_args = re.search(r'\b(somar|multiplicar|dividir|resto|potencia|log|raiz)\s+([^\s]+)\s+([^\s]+)', conteudo)
         if match_2_args:
             cmd, a, b = match_2_args.groups()
             print(f"DEBUG: Padrão de 2 argumentos por texto detectado. Comando: {cmd}, Args: [{a}, {b}]")
