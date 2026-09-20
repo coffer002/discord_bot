@@ -56,7 +56,7 @@ async def processar_comando_math(channel, operacao: str, args: list):
             print(f"DEBUG: Executando função em C: somar_em_c({val_a}, {val_b})")
             resultado = math_c.somar_em_c(ctypes.c_double(val_a), ctypes.c_double(val_b))
             print(f"DEBUG: Operação somar concluída. Resultado: {resultado}")
-            await channel.send(f"Calculado: a soma de {a} e {b} é: **{resultado}**")
+            await channel.send(f"Calculado: a soma de {a} e {b} é: **{resultado:.10f}**")
 
         elif operacao == "multiplicar":
             a, b = args[0], args[1]
@@ -64,7 +64,7 @@ async def processar_comando_math(channel, operacao: str, args: list):
             print(f"DEBUG: Executando função em C: multiplicar_em_c({val_a}, {val_b})")
             resultado = math_c.multiplicar_em_c(ctypes.c_double(val_a), ctypes.c_double(val_b))
             print(f"DEBUG: Operação multiplicar concluída. Resultado: {resultado}")
-            await channel.send(f"Calculado: a multiplicação de {a} e {b} é: **{resultado}**")
+            await channel.send(f"Calculado: a multiplicação de {a} e {b} é: **{resultado:.10f}**")
 
         elif operacao == "dividir":
             a, b = args[0], args[1]
@@ -74,7 +74,7 @@ async def processar_comando_math(channel, operacao: str, args: list):
                 print(f"DEBUG: Executando função em C: dividir_em_c({val_a}, {val_b})")
                 resultado = math_c.dividir_em_c(ctypes.c_double(val_a), ctypes.c_double(val_b))
                 print(f"DEBUG: Operação dividir concluída. Resultado: {resultado}")
-                await channel.send(f"Calculado: a divisão de {a} por {b} é: **{resultado}**")
+                await channel.send(f"Calculado: a divisão de {a} por {b} é: **{resultado:.10f}**")
             else:
                 print("DEBUG: Divisão por zero interceptada.")
                 await channel.send("Erro matemático: divisão por zero")
@@ -85,7 +85,7 @@ async def processar_comando_math(channel, operacao: str, args: list):
             print(f"DEBUG: Executando função em C: resto_em_c({val_a}, {val_b})")
             resultado = math_c.resto_em_c(ctypes.c_int(val_a), ctypes.c_int(val_b))
             print(f"DEBUG: Operação resto concluída. Resultado: {resultado}")
-            await channel.send(f"Calculado: o resto da divisão de {a} por {b} é: **{resultado}**")
+            await channel.send(f"Calculado: o resto da divisão de {a} por {b} é: **{resultado:.10f}**")
 
         elif operacao == "modulo":
             a = args[0]
@@ -93,7 +93,7 @@ async def processar_comando_math(channel, operacao: str, args: list):
             print(f"DEBUG: Executando função em C: modulo_em_c({val_a})")
             resultado = math_c.modulo_em_c(ctypes.c_double(val_a))
             print(f"DEBUG: Operação modulo concluída. Resultado: {resultado}")
-            await channel.send(f"Calculado: o módulo de {a} é: **{resultado}**")
+            await channel.send(f"Calculado: o módulo de {a} é: **{resultado:.10f}**")
 
         elif operacao == "potencia":
             a, b = args[0], args[1]
@@ -101,7 +101,7 @@ async def processar_comando_math(channel, operacao: str, args: list):
             print(f"DEBUG: Executando função em C: potencia_c({val_a}, {val_b})")
             resultado = math_c.potencia_c(ctypes.c_double(val_a), ctypes.c_double(val_b))
             print(f"DEBUG: Operação potencia concluída. Resultado: {resultado}")
-            await channel.send(f"Calculado: a potência de {a} elevado a {b} é: **{resultado}**")
+            await channel.send(f"Calculado: a potência de {a} elevado a {b} é: **{resultado:.10f}**")
 
         elif operacao == "raiz":
             a, b = args[0], args[1]
@@ -110,7 +110,7 @@ async def processar_comando_math(channel, operacao: str, args: list):
             print(f"DEBUG: Executando função em C: potencia_c({val_a}, {val_c}), onde {val_c} = 1 / {val_b}")
             resultado = math_c.potencia_c(ctypes.c_double(val_a), ctypes.c_double(val_c))
             print(f"DEBUG: Operação potencia concluída. Resultado: {resultado}")
-            await channel.send(f"Calculado: a raiz {b}-ésima de {a} é: **{resultado}**")
+            await channel.send(f"Calculado: a raiz {b}-ésima de {a} é: **{resultado:.10f}**")
 
         elif operacao == "sqrt":
             a = args[0]
@@ -120,7 +120,7 @@ async def processar_comando_math(channel, operacao: str, args: list):
             print(f"DEBUG: Executando função em C: potencia_c({val_a}, {val_c}), onde {val_c} = 1 / {val_b}")
             resultado = math_c.potencia_c(ctypes.c_double(val_a), ctypes.c_double(val_c))
             print(f"DEBUG: Operação potencia concluída. Resultado: {resultado}")
-            await channel.send(f"Calculado: a raiz quadrada de {a} é: **{resultado}**")
+            await channel.send(f"Calculado: a raiz quadrada de {a} é: **{resultado:.10f}**")
 
         elif operacao == "cbrt":
             a = args[0]
@@ -130,7 +130,7 @@ async def processar_comando_math(channel, operacao: str, args: list):
             print(f"DEBUG: Executando função em C: potencia_c({val_a}, {val_c}), onde {val_c} = 1 / {val_b}")
             resultado = math_c.potencia_c(ctypes.c_double(val_a), ctypes.c_double(val_c))
             print(f"DEBUG: Operação potencia concluída. Resultado: {resultado}")
-            await channel.send(f"Calculado: a raiz cubica de {a} é: **{resultado}**")
+            await channel.send(f"Calculado: a raiz cubica de {a} é: **{resultado:.10f}**")
 
 
         elif operacao == "log":
@@ -143,7 +143,7 @@ async def processar_comando_math(channel, operacao: str, args: list):
                 print("DEBUG: Erro de restrição matemática retornado pela função log_em_c.")
                 await channel.send("Erro matemático: A base deve ser > 0 e ≠ 1. O logaritmando deve ser > 0.")
             else:
-                await channel.send(f"Calculado: o log de {b} na base {a} é: **{resultado:.4f}**")
+                await channel.send(f"Calculado: o log de {b} na base {a} é: **{resultado:.10f}**")
 
         elif operacao == "ln":
             a = args[0]
@@ -156,7 +156,7 @@ async def processar_comando_math(channel, operacao: str, args: list):
                 print("DEBUG: Erro de restrição matemática retornado pela função log_em_c (ln).")
                 await channel.send("Erro matemático: O logaritmando deve ser > 0.")
             else:
-                await channel.send(f"Calculado: o ln de {a} é: **{resultado:.4f}**")
+                await channel.send(f"Calculado: o ln de {a} é: **{resultado:.10f}**")
         elif operacao == "exp":
             a = args[0]
             val_a = parse_constante(a)
@@ -164,7 +164,7 @@ async def processar_comando_math(channel, operacao: str, args: list):
             print(f"DEBUG: Executando função em C para exp(x): potencia_c({val_e}, {val_a})")
             resultado = math_c.potencia_c(ctypes.c_double(val_e), ctypes.c_double(val_a))
             print(f"DEBUG: Operação exp(x) concluída. Resultado: {resultado}")
-            await channel.send(f"Calculado: o exp({a}) é: **{resultado:.4f}**")
+            await channel.send(f"Calculado: o exp({a}) é: **{resultado:.10f}**")
 
     except ValueError:
         print("DEBUG: Exceção ValueError detectada. Entradas não podiam ser convertidas.")
