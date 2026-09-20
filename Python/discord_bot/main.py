@@ -94,8 +94,9 @@ async def modulo(ctx, a: str):
 async def potencia(ctx, a: str, b: str):
     try:
         val_a = parse_constante(a)
-        val_b = int(parse_constante(b))
-        resultado = math_c.potencia_c(ctypes.c_double(val_a), ctypes.c_int(val_b))
+        val_b = parse_constante(b)
+        print(val_a, val_b)
+        resultado = math_c.potencia_c(ctypes.c_double(val_a), ctypes.c_double(val_b))
         await ctx.send(f"Calculado: a potência de {a} elevado a {b} é: **{resultado}**")
     except ValueError:
         await ctx.send("Erro: Entrada inválida. Forneça números ou constantes válidas.")
