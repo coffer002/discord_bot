@@ -56,7 +56,7 @@ EXPORT double modulo_em_c(double a) {
     }
 }
 
-EXPORT double potencia_c(double a, double b) {
+EXPORT double potencia_em_c(double a, double b) {
     if (a == 0.0) return 0.0;
     if (b == 0.0) return 1.0;
     if (a < 0.0) return 124123.2314;
@@ -66,7 +66,7 @@ EXPORT double potencia_c(double a, double b) {
 
 
 /*
-EXPORT double potencia_c(double a, int b) {
+EXPORT double potencia_em_c(double a, int b) {
     double result = 1.0;
     for (int i = 1; i <= b; i++) {
         result *= a;

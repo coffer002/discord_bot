@@ -22,7 +22,7 @@ math_c.multiplicar_em_c.restype = ctypes.c_double
 math_c.dividir_em_c.restype = ctypes.c_double
 math_c.resto_em_c.restype = ctypes.c_double
 math_c.modulo_em_c.restype = ctypes.c_double
-math_c.potencia_c.restype = ctypes.c_double
+math_c.potencia_em_c.restype = ctypes.c_double
 math_c.log_em_c.restype = ctypes.c_double
 
 print("DEBUG: Configurando Intents do Discord...")
@@ -98,8 +98,8 @@ async def processar_comando_math(channel, operacao: str, args: list):
         elif operacao == "potencia":
             a, b = args[0], args[1]
             val_a, val_b = parse_constante(a), parse_constante(b)
-            print(f"DEBUG: Executando função em C: potencia_c({val_a}, {val_b})")
-            resultado = math_c.potencia_c(ctypes.c_double(val_a), ctypes.c_double(val_b))
+            print(f"DEBUG: Executando função em C: potencia_em_c({val_a}, {val_b})")
+            resultado = math_c.potencia_em_c(ctypes.c_double(val_a), ctypes.c_double(val_b))
             print(f"DEBUG: Operação potencia concluída. Resultado: {resultado}")
             await channel.send(f"Calculado: a potência de {a} elevado a {b} é: **{resultado:.10f}**")
 
@@ -107,8 +107,8 @@ async def processar_comando_math(channel, operacao: str, args: list):
             a, b = args[0], args[1]
             val_a, val_b = parse_constante(a), parse_constante(b)
             val_c = 1 / val_b
-            print(f"DEBUG: Executando função em C: potencia_c({val_a}, {val_c}), onde {val_c} = 1 / {val_b}")
-            resultado = math_c.potencia_c(ctypes.c_double(val_a), ctypes.c_double(val_c))
+            print(f"DEBUG: Executando função em C: potencia_em_c({val_a}, {val_c}), onde {val_c} = 1 / {val_b}")
+            resultado = math_c.potencia_em_c(ctypes.c_double(val_a), ctypes.c_double(val_c))
             print(f"DEBUG: Operação potencia concluída. Resultado: {resultado}")
             await channel.send(f"Calculado: a raiz {b}-ésima de {a} é: **{resultado:.10f}**")
 
@@ -117,8 +117,8 @@ async def processar_comando_math(channel, operacao: str, args: list):
             val_a = parse_constante(a)
             val_b = 2
             val_c = 1 / val_b
-            print(f"DEBUG: Executando função em C: potencia_c({val_a}, {val_c}), onde {val_c} = 1 / {val_b}")
-            resultado = math_c.potencia_c(ctypes.c_double(val_a), ctypes.c_double(val_c))
+            print(f"DEBUG: Executando função em C: potencia_em_c({val_a}, {val_c}), onde {val_c} = 1 / {val_b}")
+            resultado = math_c.potencia_em_c(ctypes.c_double(val_a), ctypes.c_double(val_c))
             print(f"DEBUG: Operação potencia concluída. Resultado: {resultado}")
             await channel.send(f"Calculado: a raiz quadrada de {a} é: **{resultado:.10f}**")
 
@@ -127,8 +127,8 @@ async def processar_comando_math(channel, operacao: str, args: list):
             val_a = parse_constante(a)
             val_b = 3
             val_c = 1 / val_b
-            print(f"DEBUG: Executando função em C: potencia_c({val_a}, {val_c}), onde {val_c} = 1 / {val_b}")
-            resultado = math_c.potencia_c(ctypes.c_double(val_a), ctypes.c_double(val_c))
+            print(f"DEBUG: Executando função em C: potencia_em_c({val_a}, {val_c}), onde {val_c} = 1 / {val_b}")
+            resultado = math_c.potencia_em_c(ctypes.c_double(val_a), ctypes.c_double(val_c))
             print(f"DEBUG: Operação potencia concluída. Resultado: {resultado}")
             await channel.send(f"Calculado: a raiz cubica de {a} é: **{resultado:.10f}**")
 
@@ -161,8 +161,8 @@ async def processar_comando_math(channel, operacao: str, args: list):
             a = args[0]
             val_a = parse_constante(a)
             val_e = constantes["e"]
-            print(f"DEBUG: Executando função em C para exp(x): potencia_c({val_e}, {val_a})")
-            resultado = math_c.potencia_c(ctypes.c_double(val_e), ctypes.c_double(val_a))
+            print(f"DEBUG: Executando função em C para exp(x): potencia_em_c({val_e}, {val_a})")
+            resultado = math_c.potencia_em_c(ctypes.c_double(val_e), ctypes.c_double(val_a))
             print(f"DEBUG: Operação exp(x) concluída. Resultado: {resultado}")
             await channel.send(f"Calculado: o exp({a}) é: **{resultado:.10f}**")
 
