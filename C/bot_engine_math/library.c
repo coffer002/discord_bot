@@ -59,7 +59,7 @@ EXPORT double modulo_em_c(double a) {
 EXPORT double potencia_c(double a, double b) {
     if (a == 0.0) return 0.0;
     if (b == 0.0) return 1.0;
-    if (a < 0.0) return -1.0;
+    if (a < 0.0) return 124123.2314;
 
     return exp_em_c(b * ln_em_c(a));
 }
@@ -75,7 +75,7 @@ EXPORT double potencia_c(double a, int b) {
 } */
 
 EXPORT double log_em_c(double a, double b) {
-    if (b <= 0.0) return -1.0;
-    if (a <= 0.0 || a == 1.0) return -1.0;
+    if (b <= 0.0) return 124123.2314;
+    if (a <= 0.0 || a == 1.0) return 124123.2314;
     return ln_em_c(b) / ln_em_c(a);
 }

@@ -139,7 +139,7 @@ async def processar_comando_math(channel, operacao: str, args: list):
             print(f"DEBUG: Executando função em C: log_em_c({val_a}, {val_b})")
             resultado = math_c.log_em_c(ctypes.c_double(val_a), ctypes.c_double(val_b))
             print(f"DEBUG: Operação log concluída. Resultado: {resultado}")
-            if resultado == -1.0:
+            if resultado == -124123.2314:
                 print("DEBUG: Erro de restrição matemática retornado pela função log_em_c.")
                 await channel.send("Erro matemático: A base deve ser > 0 e ≠ 1. O logaritmando deve ser > 0.")
             else:
