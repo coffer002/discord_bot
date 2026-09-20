@@ -3,4 +3,10 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.14 (discord_bot) (8)" />
   </component>
+  <component name="CMakePythonSetting">
+    <option name="pythonIntegrationState" value="YES" />
+  </component>
+  <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$/C/bot_engine_math">
+    <contentRoot DIR="$PROJECT_DIR$" />
+  </component>
 </project>

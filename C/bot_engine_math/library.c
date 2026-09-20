@@ -4,13 +4,13 @@
 #define EXPORT
 #endif
 
-long double ln_em_c(long double x) {
+double ln_em_c(double x) {
     if (x <= 0) return 0.0;
 
-    long double y = (x - 1.0) / (x + 1.0);
-    long double y2 = y * y;
-    long double sum = 0.0;
-    long double termo = y;
+    double y = (x - 1.0) / (x + 1.0);
+    double y2 = y * y;
+    double sum = 0.0;
+    double termo = y;
 
     for (int i = 1; i < 100; i += 2) {
         sum += termo / i;
@@ -19,15 +19,15 @@ long double ln_em_c(long double x) {
     return 2.0 * sum;
 }
 
-EXPORT long double somar_em_c(long double a, long double b) {
+EXPORT double somar_em_c(double a, double b) {
     return a + b;
 }
 
-EXPORT long double multiplicar_em_c(long double a, long double b) {
+EXPORT double multiplicar_em_c(double a, double b) {
     return a * b;
 }
 
-EXPORT long double dividir_em_c(long double a, long double b) {
+EXPORT double dividir_em_c(double a, double b) {
     return a / b;
 }
 
@@ -35,7 +35,7 @@ EXPORT int resto_em_c(int a, int b) {
     return a % b;
 }
 
-EXPORT long double modulo_em_c(long double a) {
+EXPORT double modulo_em_c(double a) {
     if (a >= 0) {
         return a;
     } else {
@@ -43,15 +43,15 @@ EXPORT long double modulo_em_c(long double a) {
     }
 }
 
-EXPORT long double potencia_c(long double a, int b) {
-    long double result = 1.0;
+EXPORT double potencia_c(double a, int b) {
+    double result = 1.0;
     for (int i = 1; i <= b; i++) {
         result *= a;
     }
     return result;
 }
 
-EXPORT long double log_em_c(long double a, long double b) {
+EXPORT double log_em_c(double a, double b) {
     if (b <= 0.0) return -1.0;
     if (a <= 0.0 || a == 1.0) return -1.0;
     return ln_em_c(b) / ln_em_c(a);
