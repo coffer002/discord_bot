@@ -112,6 +112,27 @@ async def processar_comando_math(channel, operacao: str, args: list):
             print(f"DEBUG: Operação potencia concluída. Resultado: {resultado}")
             await channel.send(f"Calculado: a raiz {b}-ésima de {a} é: **{resultado}**")
 
+        elif operacao == "sqrt":
+            a = args[0]
+            val_a = parse_constante(a)
+            val_b = 2
+            val_c = 1 / val_b
+            print(f"DEBUG: Executando função em C: potencia_c({val_a}, {val_c}), onde {val_c} = 1 / {val_b}")
+            resultado = math_c.potencia_c(ctypes.c_double(val_a), ctypes.c_double(val_c))
+            print(f"DEBUG: Operação potencia concluída. Resultado: {resultado}")
+            await channel.send(f"Calculado: a raiz quadrada de {a} é: **{resultado}**")
+
+        elif operacao == "cbrt":
+            a = args[0]
+            val_a = parse_constante(a)
+            val_b = 3
+            val_c = 1 / val_b
+            print(f"DEBUG: Executando função em C: potencia_c({val_a}, {val_c}), onde {val_c} = 1 / {val_b}")
+            resultado = math_c.potencia_c(ctypes.c_double(val_a), ctypes.c_double(val_c))
+            print(f"DEBUG: Operação potencia concluída. Resultado: {resultado}")
+            await channel.send(f"Calculado: a raiz cubica de {a} é: **{resultado}**")
+
+
         elif operacao == "log":
             a, b = args[0], args[1]
             val_a, val_b = parse_constante(a), parse_constante(b)
@@ -185,6 +206,17 @@ async def raiz(ctx, a: str, b: str):
     await processar_comando_math(ctx.channel, "raiz", [a, b])
 
 @bot.command()
+async def sqrt(ctx, a: str):
+    print(f"DEBUG: Comando prefixado '!sqrt' invocado no canal {ctx.channel.id}")
+    await processar_comando_math(ctx.channel, "sqrt", [a])
+
+@bot.command()
+async def cbrt(ctx, a: str):
+    print(f"DEBUG: Comando prefixado '!cbrt' invocado no canal {ctx.channel.id}")
+    await processar_comando_math(ctx.channel, "cbrt", [a])
+
+
+@bot.command()
 async def log(ctx, a: str, b: str):
     print(f"DEBUG: Comando prefixado '!log' invocado no canal {ctx.channel.id}")
     await processar_comando_math(ctx.channel, "log", [a, b])
@@ -235,7 +267,7 @@ async def on_message(message):
             await processar_comando_math(message.channel, cmd, [a, b])
             return
 
-        match_1_arg = re.search(r'\b(modulo|ln|exp)\s+([^\s]+)', conteudo)
+        match_1_arg = re.search(r'\b(modulo|ln|exp|sqrt|cbrt)\s+([^\s]+)', conteudo)
         if match_1_arg:
             cmd, a = match_1_arg.groups()
             print(f"DEBUG: Padrão de 1 argumento por texto detectado. Comando: {cmd}, Arg: [{a}]")
