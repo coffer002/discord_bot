@@ -15,7 +15,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix='!', intents=intents)
 
-#a
+
 @bot.command()
 async def somar(ctx, a: float, b: float):
     resultado = math_c.somar_em_c(ctypes.c_longdouble(a), ctypes.c_longdouble(b))
@@ -37,7 +37,7 @@ async def dividir(ctx, a: float, b: float):
 
 @bot.command()
 async def resto(ctx, a: float, b: int):
-    resultado = math_c.resto_em_c(ctypes.c_longdouble(a), ctypes.c_int(b))
+    resultado = math_c.resto_em_c(ctypes.c_int(a), ctypes.c_int(b))
     await ctx.send(f"Calculado: o resto da divisão de {a} por {b} é: **{resultado}**")
 
 @bot.command()
@@ -49,6 +49,14 @@ async def modulo(ctx, a: float):
 async def potencia(ctx, a: float, b: int):
     resultado = math_c.potencia_c(ctypes.c_longdouble(a), ctypes.c_int(b))
     await ctx.send(f"Calculado: a potência de {a} elevado a {b} é: **{resultado}**")
+
+@bot.command()
+async def log(ctx, a: float, b: float):
+    resultado = math_c.log_em_c(a, b)
+    if resultado == -1.0:
+         await ctx.send("Erro matemático: A base deve ser > 0 e ≠ 1. O logaritmando deve ser > 0.")
+    else:
+         await ctx.send(f"Calculado: o log de {b} na base {a} é: **{resultado:.4f}**")
 
 @bot.event
 async def on_ready():
