@@ -127,6 +127,14 @@ async def processar_comando_math(channel, operacao: str, args: list):
                 await channel.send("Erro matemático: O logaritmando deve ser > 0.")
             else:
                 await channel.send(f"Calculado: o ln de {a} é: **{resultado:.4f}**")
+        elif operacao == "exp":
+            a = args[0]
+            val_a = parse_constante(a)
+            val_e = constantes["e"]
+            print(f"DEBUG: Executando função em C para exp(x): potencia_c({val_e}, {val_a})")
+            resultado = math_c.potencia_c(ctypes.c_double(val_e), ctypes.c_double(val_a))
+            print(f"DEBUG: Operação exp(x) concluída. Resultado: {resultado}")
+            await channel.send(f"Calculado: o exp({a}) é: **{resultado:.4f}**")
 
     except ValueError:
         print("DEBUG: Exceção ValueError detectada. Entradas não podiam ser convertidas.")
@@ -172,6 +180,11 @@ async def ln(ctx, a: str):
     print(f"DEBUG: Comando prefixado '!ln' invocado no canal {ctx.channel.id}")
     await processar_comando_math(ctx.channel, "ln", [a])
 
+@bot.command()
+async def exp(ctx, a: str):
+    print(f"DEBUG: Comando prefixado '!exp' invocado no canal {ctx.channel.id}")
+    await processar_comando_math(ctx.channel, "exp", [a])
+
 @bot.event
 async def on_message(message):
     if message.author == bot.user:
@@ -208,7 +221,7 @@ async def on_message(message):
             await processar_comando_math(message.channel, cmd, [a, b])
             return
 
-        match_1_arg = re.search(r'\b(modulo|ln)\s+([^\s]+)', conteudo)
+        match_1_arg = re.search(r'\b(modulo|ln|exp)\s+([^\s]+)', conteudo)
         if match_1_arg:
             cmd, a = match_1_arg.groups()
             print(f"DEBUG: Padrão de 1 argumento por texto detectado. Comando: {cmd}, Arg: [{a}]")
