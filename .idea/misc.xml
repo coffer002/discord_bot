@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Black">
-    <option name="sdkName" value="Python 3.14 (discord_bot) (2)" />
+    <option name="sdkName" value="Python 3.14 (discord_bot) (8)" />
   </component>
-  <component name="CMakePythonSetting">
-    <option name="pythonIntegrationState" value="YES" />
-  </component>
-  <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$/C/bot_engine_math">
-    <contentRoot DIR="$PROJECT_DIR$" />
-  </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.14 (discord_bot) (2)" project-jdk-type="Python SDK" />
 </project>
