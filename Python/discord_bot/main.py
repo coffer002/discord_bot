@@ -67,7 +67,7 @@ async def processar_comando_math(channel, operacao: str, args: list):
             print(f"DEBUG: Executando função em C: subtrair_em_c({val_a}, {val_b})")
             resultado = math_c.subtrair_em_c(ctypes.c_double(val_a), ctypes.c_double(val_b))
             print(f"DEBUG: Operação subtrair concluída. Resultado: {resultado}")
-            await channel.send(f"Calculado: a soma de {a} e {b} é: **{resultado:.10f}**")
+            await channel.send(f"Calculado: a subtração de {a} e {b} é: **{resultado:.10f}**")
 
         elif operacao == "multiplicar":
             a, b = args[0], args[1]
