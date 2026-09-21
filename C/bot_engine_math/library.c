@@ -45,7 +45,12 @@ EXPORT double multiplicar_em_c(double a, double b) {
 }
 
 EXPORT double dividir_em_c(double a, double b) {
-    return a / b;
+    if (b==0.0) {
+        return 124123.2314;
+    }
+    else {
+        return a / b;
+    }
 }
 
 EXPORT int resto_em_c(int a, int b) {

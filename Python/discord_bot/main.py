@@ -96,6 +96,9 @@ async def processar_comando_math(channel, operacao: str, args: list):
             resultado = math_c.resto_em_c(ctypes.c_int(val_a), ctypes.c_int(val_b))
             print(f"DEBUG: Operação resto concluída. Resultado: {resultado}")
             await channel.send(f"Calculado: o resto da divisão de {a} por {b} é: **{resultado:.10f}**")
+            if val_b == 0:
+                print("DEBUG: Divisão por zero interceptada.")
+                await channel.send("Erro matemático: divisão por zero")
 
         elif operacao == "modulo":
             a = args[0]
