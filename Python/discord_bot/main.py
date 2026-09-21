@@ -21,7 +21,8 @@ math_c.somar_em_c.restype = ctypes.c_double
 math_c.subtrair_em_c.restype = ctypes.c_double
 math_c.multiplicar_em_c.restype = ctypes.c_double
 math_c.dividir_em_c.restype = ctypes.c_double
-math_c.resto_em_c.restype = ctypes.c_double
+math_c.resto_em_c.argtypes = [ctypes.c_int, ctypes.c_int]
+math_c.resto_em_c.restype = ctypes.c_int
 math_c.modulo_em_c.restype = ctypes.c_double
 math_c.potencia_em_c.restype = ctypes.c_double
 math_c.log_em_c.restype = ctypes.c_double
@@ -79,26 +80,25 @@ async def processar_comando_math(channel, operacao: str, args: list):
         elif operacao == "dividir":
             a, b = args[0], args[1]
             val_a, val_b = parse_constante(a), parse_constante(b)
-            print(f"DEBUG: Verificando divisão por zero para: {val_a} / {val_b}")
-            if val_b != 0:
-                print(f"DEBUG: Executando função em C: dividir_em_c({val_a}, {val_b})")
-                resultado = math_c.dividir_em_c(ctypes.c_double(val_a), ctypes.c_double(val_b))
-                print(f"DEBUG: Operação dividir concluída. Resultado: {resultado}")
-                await channel.send(f"Calculado: a divisão de {a} por {b} é: **{resultado:.10f}**")
-            else:
+            resultado = math_c.dividir_em_c(ctypes.c_double(val_a), ctypes.c_double(val_b))
+            if resultado == 124123.2314:
                 print("DEBUG: Divisão por zero interceptada.")
                 await channel.send("Erro matemático: divisão por zero")
+            else:
+                print(f"DEBUG: Operação resto concluída. Resultado: {resultado}")
+                await channel.send(f"Calculado: o resto da divisão de {a} por {b} é: **{resultado:.10f}**")
 
         elif operacao == "resto":
             a, b = args[0], args[1]
-            val_a, val_b = int(parse_constante(a)), int(parse_constante(b))
+            val_a, val_b = int(float(parse_constante(a))), int(float(parse_constante(b)))
             print(f"DEBUG: Executando função em C: resto_em_c({val_a}, {val_b})")
             resultado = math_c.resto_em_c(ctypes.c_int(val_a), ctypes.c_int(val_b))
-            print(f"DEBUG: Operação resto concluída. Resultado: {resultado}")
-            await channel.send(f"Calculado: o resto da divisão de {a} por {b} é: **{resultado:.10f}**")
-            if val_b == 0:
+            if resultado == 124123:
                 print("DEBUG: Divisão por zero interceptada.")
                 await channel.send("Erro matemático: divisão por zero")
+            else:
+                print(f"DEBUG: Operação resto concluída. Resultado: {resultado}")
+                await channel.send(f"Calculado: o resto da divisão de {a} por {b} é: **{resultado:}**, onde a e b pertencentes aos inteiros")
 
         elif operacao == "modulo":
             a = args[0]

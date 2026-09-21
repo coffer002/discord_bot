@@ -54,9 +54,13 @@ EXPORT double dividir_em_c(double a, double b) {
 }
 
 EXPORT int resto_em_c(int a, int b) {
-    return a % b;
+    if (b == 0) {
+        return 124123;
+    }
+    else {
+        return a % b;
+    }
 }
-
 EXPORT double modulo_em_c(double a) {
     if (a >= 0) {
         return a;
