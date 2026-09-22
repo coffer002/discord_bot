@@ -253,8 +253,25 @@ async def exp(ctx, a: str):
 async def on_message(message):
     if message.author == bot.user:
         return
+    print(f"DEBUG: Usuário: {message.author}, portador do ID: {message.author.id} enviou uma mensagem às: {message.created_at.strftime('%d/%m/%Y %H:%M:%S')}.")
+    print(f"DEBUG: Mensagem localizada no servidor: {message.guild.id if message.guild else 'DM'} no canal {message.channel.id}.")
+    print(f"DEBUG: Lendo mensagem capturada: '{message.content}'.")
 
-    print(f"DEBUG: Lendo mensagem capturada: '{message.content}'")
+    await bot.process_commands(message)
+
+    if message.content == "6":
+        print("DEBUG: Mensagem \"6\" capturada no servidor, enviando resposta automáticamente.")
+        await message.channel.send("7")
+        print("DEBUG: Mensagem \"7\" enviada como resposta.")
+        return
+
+    await bot.process_commands(message)
+
+    if message.content == "67":
+        print("DEBUG: Mensagem \"67\" capturada no servidor, enviando resposta automáticamente.")
+        await message.channel.send("https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExOGhudjhremZoYTJkaTRhYm9ieXlpNWZsMXY0YmZpeGw4dG4xZXhrdSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TKa7fQzChHylCQ89to/giphy.gif")
+        print("DEBUG: GIF enviado como resposta.")
+        return
 
     await bot.process_commands(message)
 

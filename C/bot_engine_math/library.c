@@ -95,3 +95,4 @@ EXPORT double log_em_c(double a, double b) {
     if (a <= 0.0 || a == 1.0) return 124123.2314;
     return ln_em_c(b) / ln_em_c(a);
 }
+
