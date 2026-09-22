@@ -267,7 +267,7 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
-    if message.content == "67":
+    if re.search(r'(?<![A-Za-z0-9])67(?![A-Za-z0-9])', message.content):
         print("DEBUG: Mensagem \"67\" capturada no servidor, enviando resposta automáticamente.")
         await message.channel.send("https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExOGhudjhremZoYTJkaTRhYm9ieXlpNWZsMXY0YmZpeGw4dG4xZXhrdSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TKa7fQzChHylCQ89to/giphy.gif")
         print("DEBUG: GIF enviado como resposta.")
