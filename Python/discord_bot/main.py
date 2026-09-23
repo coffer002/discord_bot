@@ -6,6 +6,7 @@ import re
 from dotenv import load_dotenv, find_dotenv
 from pathlib import Path
 import math
+import sys
 
 print("DEBUG: Iniciando carregamento do bot e variáveis de ambiente...")
 load_dotenv(find_dotenv())
@@ -26,6 +27,8 @@ math_c.resto_em_c.restype = ctypes.c_int
 math_c.modulo_em_c.restype = ctypes.c_double
 math_c.potencia_em_c.restype = ctypes.c_double
 math_c.log_em_c.restype = ctypes.c_double
+math_c.troca_de_base_em_c.restype = ctypes.c_double
+math_c.troca_de_base_em_c.argtypes = [ctypes.c_double, ctypes.c_int, ctypes.c_int]
 
 
 print("DEBUG: Configurando Intents do Discord...")
@@ -179,6 +182,15 @@ async def processar_comando_math(channel, operacao: str, args: list):
             print(f"DEBUG: Operação exp(x) concluída. Resultado: {resultado}")
             await channel.send(f"Calculado: o exp({a}) é: **{resultado:.10f}**")
 
+        elif operacao == "troca_de_base":
+            a, base_a, base_b = args[0], args[1], args[2]
+            val_a = parse_constante(a)
+            val_b = int(parse_constante(base_a))
+            val_c = int(parse_constante(base_b))
+            resultado = math_c.troca_de_base_em_c(ctypes.c_double(val_a), ctypes.c_int(val_b), ctypes.c_int(val_c))
+            print(f"DEBUG: O resultado é {resultado}")
+            await channel.send(f"Calculado o número {a} na base {base_a} sendo equivalente a {resultado:.10f} na base {base_b}")
+
     except ValueError:
         print("DEBUG: Exceção ValueError detectada. Entradas não podiam ser convertidas.")
         await channel.send("Erro: Entrada inválida. Forneça números ou constantes válidas.")
@@ -249,6 +261,11 @@ async def exp(ctx, a: str):
     print(f"DEBUG: Comando prefixado '!exp' invocado no canal {ctx.channel.id}")
     await processar_comando_math(ctx.channel, "exp", [a])
 
+@bot.command()
+async def troca_de_base(ctx, a: str, b: str, c: str):
+    print(f"DEBUG: Comando prefixado '!troca_de_base' invocado no canal {ctx.channel.id}")
+    await processar_comando_math(ctx.channel, "troca_de_base", [a, b, c])
+
 @bot.event
 async def on_message(message):
     if message.author == bot.user:
@@ -294,6 +311,13 @@ async def on_message(message):
             cmd = operadores_simbolos[op]
             print(f"DEBUG: Padrão de símbolo matemático detectado. Operação: {cmd} ({op}), Args: [{a}, {b}]")
             await processar_comando_math(message.channel, cmd, [a, b])
+            return
+
+        match_3_args = re.search(r'\b(troca_de_base)\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)', conteudo)
+        if match_3_args:
+            cmd, a, b, c = match_3_args.groups()
+            print(f"DEBUG: Padrão de 3 argumentos por texto detectado. Comando: {cmd}, Args: [{a}, {b}, {c}]")
+            await processar_comando_math(message.channel, cmd, [a, b, c])
             return
 
         match_2_args = re.search(r'\b(somar|multiplicar|dividir|resto|potencia|log|raiz)\s+([^\s]+)\s+([^\s]+)', conteudo)

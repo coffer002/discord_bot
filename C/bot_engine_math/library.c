@@ -96,3 +96,77 @@ EXPORT double log_em_c(double a, double b) {
     return ln_em_c(b) / ln_em_c(a);
 }
 
+    
+//Lógica de troca de base
+
+EXPORT double troca_de_base_em_c(double a, int b, int c) {
+    long long dec_int_part = 0, int_part = 0, multiplicador = 1;
+    double frac_part = 0, val_base_10 = 0;
+    int is_negative = 0, digit, i = 12;
+
+
+    if (a < 0.0) {
+        is_negative = 1;
+        a = -a;
+    }
+
+    int_part = (long long)a;
+    frac_part = a - int_part;
+
+    //Converte para a base 10 ex.: 1010 = 10
+    while (int_part > 0) {
+        digit = int_part % 10;
+        val_base_10 += digit * multiplicador;
+        multiplicador *= b;
+        int_part /= 10;
+    }
+
+    double frac_multiplier = 1.0 / b;
+    while (frac_part > 1e-9 && i > 0) {
+        frac_part *= 10.0;
+        digit = (int)frac_part;
+        val_base_10 += digit * frac_multiplier;
+        frac_part -= digit;
+        frac_multiplier /= b;
+        i--;
+    }
+
+    if (c == 10) {
+        if (is_negative == 0) {
+            return val_base_10;
+        }
+        else {
+            return -val_base_10;
+        }
+    }
+
+    //base10 para base n
+        else {
+            dec_int_part = (long long)val_base_10;
+            double dec_frac_part = val_base_10 - dec_int_part;
+
+            double result = 0.0;
+            long long res_multiplier = 1;
+
+            // Converte a parte inteira para base_b
+            while (dec_int_part > 0) {
+                digit = dec_int_part % c;
+                result += digit * res_multiplier;
+                res_multiplier *= 10;
+                dec_int_part /= c;
+            }
+
+            // Converte a parte fracionária para base_b
+            double res_divisor = 10.0;
+            i = 11;
+            while (dec_frac_part > 1e-9 && i > 0) {
+                dec_frac_part *= c;
+                digit = (int)dec_frac_part;
+                result += (double)digit / res_divisor;
+                dec_frac_part -= digit;
+                res_divisor *= 10.0;
+                i--;
+            }
+            return is_negative ? -result : result;
+        }
+}
