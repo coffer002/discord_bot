@@ -9,6 +9,9 @@
 #define EXPORT
 #endif
 
+#define PI 3.14159265358979323846
+#define TWO_PI 6.28318530717958647692
+
 
 double ln_em_c(double x) {
     printf("[DEBUG math.dll]: ln_em_c recebido | x = %f\n", x);
@@ -130,23 +133,12 @@ EXPORT double potencia_em_c(double a, double b) {
     double res;
     if (a == 0.0) res = 0.0;
     else if (b == 0.0) res = 1.0;
-    else if (a < 0.0) res = 124123.2314;
     else res = exp_em_c(b * ln_em_c(a));
 
     printf("[DEBUG math.dll]: potencia_em_c retorno | result = %f\n", res);
     fflush(stdout);
     return res;
 }
-
-
-/*
-EXPORT double potencia_em_c(double a, int b) {
-    double result = 1.0;
-    for (int i = 1; i <= b; i++) {
-        result *= a;
-    }
-    return result;
-} */
 
 EXPORT double log_em_c(double a, double b) {
     printf("[DEBUG math.dll]: log_em_c recebido | a = %f, b = %f\n", a, b);
@@ -168,6 +160,31 @@ EXPORT double log_em_c(double a, double b) {
     printf("[DEBUG math.dll]: log_em_c retorno | result = %f\n", res);
     fflush(stdout);
     return res;
+}
+
+EXPORT double sin_em_c(double x) {
+    printf("[DEBUG math.dll]: sin_em_c recebido | x = %f\n", x); //Taylor <3
+    fflush(stdout);
+
+
+    long long voltas = (long long)(x / TWO_PI);
+    double x_norm = x - (voltas * TWO_PI);
+
+    while (x_norm > PI)  x_norm -= TWO_PI;
+    while (x_norm < -PI) x_norm += TWO_PI;
+    double termo = x_norm;
+    double sum = x_norm;
+    double x2 = x_norm * x_norm;
+
+    for (int i = 1; i < 100; i++) {
+        termo = -termo * x2 / ((2 * i) * (2 * i + 1));
+        sum += termo;
+        if (termo < 1e-15 && termo > -1e-15) break;
+    }
+
+    printf("[DEBUG math.dll]: sin_em_c retorno | result = %f\n", sum);
+    fflush(stdout);
+    return sum;
 }
 
 
@@ -260,12 +277,6 @@ EXPORT char* rand_em_c(int a, int b) {
     fflush(stdout);
     int tamanho = a;
     int tipo = b;
-    //Tipo (b):
-    // 0 -> numeros apenas
-    // 1 -> letras apenas
-    // 2 -> numeros e letras minusculas
-    // 3 -> numeros e letras
-    // 4 -> numeros, letras e símbolos
     if (tamanho <= 0) {
         printf("[DEBUG math.dll]: rand_em_c retorno | result = \"\"\n");
         fflush(stdout);

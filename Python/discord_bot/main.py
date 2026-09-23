@@ -28,6 +28,8 @@ math_c.modulo_em_c.restype = ctypes.c_double
 math_c.potencia_em_c.restype = ctypes.c_double
 math_c.log_em_c.restype = ctypes.c_double
 math_c.log_em_c.argtypes = [ctypes.c_double, ctypes.c_double]
+math_c.sin_em_c.restype = ctypes.c_double
+math_c.sin_em_c.argtypes = [ctypes.c_double]
 math_c.troca_de_base_em_c.restype = ctypes.c_double
 math_c.troca_de_base_em_c.argtypes = [ctypes.c_double, ctypes.c_int, ctypes.c_int]
 math_c.troca_de_base_em_c.restype = ctypes.c_char_p
@@ -153,6 +155,13 @@ async def processar_comando_math(channel, operacao: str, args: list):
             print(f"[DEBUG main.py]: Operação potencia concluída. Resultado: {resultado}")
             await channel.send(f"Calculado: a raiz cubica de {a} é: **{resultado:.10f}**")
 
+        elif operacao in ["sin", "seno"]:
+            a = args[0]
+            val_a = parse_constante(a)
+            print(f"[DEBUG main.py]: Executando função em C: sin_em_c({val_a})")
+            resultado = math_c.sin_em_c(ctypes.c_double(val_a))
+            print(f"[DEBUG main.py]: Operação sin concluída. Resultado: {resultado}")
+            await channel.send(f"Calculado: o seno de {a} radianos é: **{resultado:.10f}**")
 
         elif operacao == "log":
             a, b = args[0], args[1]
@@ -190,7 +199,6 @@ async def processar_comando_math(channel, operacao: str, args: list):
                 print(f"[DEBUG main.py]: Ambos negativos: ({ln_abs_b:.10f} + (2k+1) i pi) / ({ln_abs_a:.10f} + (2m+1) i pi)")
                 await channel.send(f"Calculado: o log de {b} na base {a} é: **({ln_abs_b:.10f} + (2k+1) i pi) / ({ln_abs_a:.10f} + (2m+1) i pi)**, onde k, m pertencem aos inteiros e i = sqrt(-1)")
 
-
         elif operacao == "ln":
             a = args[0]
             val_a = parse_constante(a)
@@ -225,27 +233,17 @@ async def processar_comando_math(channel, operacao: str, args: list):
             print(f"[DEBUG main.py]: O resultado é {resultado}")
             await channel.send(f"Calculado: o número {a} na base {base_a} é equivalente a **{resultado:g}** na base {base_b}")
 
-
         elif operacao == "rand":
-
             a, b = args[0], args[1]
-
             val_a = int(parse_constante(a))
-
             val_b = int(parse_constante(b))
-
             print(f"O número de caracteres é: {val_a} e o tipo: {val_b}.")
-
             resultado_bytes = math_c.rand_em_c(ctypes.c_int(val_a), ctypes.c_int(val_b))
-
             resultado = resultado_bytes.decode('utf-8') if resultado_bytes else ""
-
             print(f"[DEBUG main.py]: O resultado é {resultado}.")
 
             if resultado == "124123":
-
                 await channel.send("Tipo inválido para a função rand Escolha um dos tipos válidos:\n""`0` - Apenas números\n""`1` - Apenas letras\n""`2` - Números e letras minúsculas\n""`3` - Números e letras\n""`4` - Números, letras e símbolos")
-
             else:
                 await channel.send(f"{resultado}")
 
@@ -304,6 +302,11 @@ async def cbrt(ctx, a: str):
     print(f"[DEBUG main.py]: Comando prefixado '!cbrt' invocado no canal {ctx.channel.id}")
     await processar_comando_math(ctx.channel, "cbrt", [a])
 
+@bot.command(aliases=['seno'])
+async def sin(ctx, a: str):
+    print(f"[DEBUG main.py]: Comando prefixado '!sin/seno' invocado no canal {ctx.channel.id}")
+    await processar_comando_math(ctx.channel, "sin", [a])
+
 @bot.command()
 async def log(ctx, a: str, b: str):
     print(f"[DEBUG main.py]: Comando prefixado '!log' invocado no canal {ctx.channel.id}")
@@ -324,7 +327,7 @@ async def troca_de_base(ctx, a: str, b: str, c: str):
     print(f"[DEBUG main.py]: Comando prefixado '!troca_de_base' invocado no canal {ctx.channel.id}")
     await processar_comando_math(ctx.channel, "troca_de_base", [a, b, c])
 
-@bot.command()
+@bot.command(aliases=['dado'])
 async def rand(ctx, a: str, b: str):
     print(f"[DEBUG main.py]: Comando prefixado '!rand' invocado no canal {ctx.channel.id}")
     print("Enviando opções: ")
@@ -390,7 +393,7 @@ async def on_message(message):
             await processar_comando_math(message.channel, cmd, [a, b])
             return
 
-        match_1_arg = re.search(r'\b(modulo|ln|exp|sqrt|cbrt)\s+([^\s]+)', conteudo)
+        match_1_arg = re.search(r'\b(modulo|ln|exp|sqrt|cbrt|sin|seno)\s+([^\s]+)', conteudo)
         if match_1_arg:
             cmd, a = match_1_arg.groups()
             print(f"[DEBUG main.py]: Padrão de 1 argumento por texto detectado. Comando: {cmd}, Arg: [{a}]")
