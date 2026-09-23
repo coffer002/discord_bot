@@ -27,6 +27,7 @@ math_c.resto_em_c.restype = ctypes.c_int
 math_c.modulo_em_c.restype = ctypes.c_double
 math_c.potencia_em_c.restype = ctypes.c_double
 math_c.log_em_c.restype = ctypes.c_double
+math_c.log_em_c.argtypes = [ctypes.c_double, ctypes.c_double]
 math_c.troca_de_base_em_c.restype = ctypes.c_double
 math_c.troca_de_base_em_c.argtypes = [ctypes.c_double, ctypes.c_int, ctypes.c_int]
 math_c.troca_de_base_em_c.restype = ctypes.c_char_p
@@ -152,17 +153,43 @@ async def processar_comando_math(channel, operacao: str, args: list):
             print(f"[DEBUG main.py]: Operação potencia concluída. Resultado: {resultado}")
             await channel.send(f"Calculado: a raiz cubica de {a} é: **{resultado:.10f}**")
 
+
         elif operacao == "log":
             a, b = args[0], args[1]
             val_a, val_b = parse_constante(a), parse_constante(b)
             print(f"[DEBUG main.py]: Executando função em C: log_em_c({val_a}, {val_b})")
             resultado = math_c.log_em_c(ctypes.c_double(val_a), ctypes.c_double(val_b))
             print(f"[DEBUG main.py]: Operação log concluída. Resultado: {resultado}")
-            if resultado == 124123.2314:
-                print("[DEBUG main.py]: Erro de restrição matemática retornado pela função log_em_c.")
-                await channel.send("Erro matemático: A base deve ser > 0 e ≠ 1. O logaritmando deve ser > 0.")
-            else:
+
+            # Validação de restrições matemáticas (base = 0, |base| = 1 ou logaritmando = 0)
+            if val_b == 0.0 or val_a == 0.0 or abs(val_a) == 1.0 or (resultado == 124123.2314 and val_a > 0 and val_b > 0):
+                print("[DEBUG main.py]: Erro de restrição matemática detectado. (base = 0, |base| = 1 ou logaritmando = 0)")
+                await channel.send("Erro matemático: A base deve satisfazer |a| > 0 e |a| ≠ 1, e o logaritmando deve ter |b| > 0.")
+
+            # CASO 1: a > 0 e b > 0 (Real padrão)
+            elif val_a > 0 and val_b > 0:
                 await channel.send(f"Calculado: o log de {b} na base {a} é: **{resultado:.10f}**")
+
+            # CASO 2: a > 0 e b < 0 (Logaritmando negativo)
+            elif val_a > 0 and val_b < 0:
+                ln_a = math_c.log_em_c(ctypes.c_double(constantes["e"]), ctypes.c_double(val_a))
+                print(f"[DEBUG main.py]: Logaritimando negativo: {resultado:.10f} + ((2k+1) i pi) / {ln_a:.10f}")
+                await channel.send(f"Calculado: o log de {b} na base {a} é: **{resultado:.10f} + ((2k+1) i pi) / {ln_a:.10f}**, onde k pertence aos inteiros e i = sqrt(-1)")
+
+            # CASO 3: a < 0 e b > 0 (Base negativa)
+            elif val_a < 0 and val_b > 0:
+                ln_abs_a = math_c.log_em_c(ctypes.c_double(constantes["e"]), ctypes.c_double(val_a))
+                ln_b = math_c.log_em_c(ctypes.c_double(constantes["e"]), ctypes.c_double(val_b))
+                print(f"[DEBUG main.py]: Base negativa: {ln_b:.10f} / ({ln_abs_a:.10f} + (2m+1) i pi)")
+                await channel.send(f"Calculado: o log de {b} na base {a} é: **{ln_b:.10f} / ({ln_abs_a:.10f} + (2m+1) i pi)**, onde m pertence aos inteiros e i = sqrt(-1)")
+
+            # CASO 4: a < 0 e b < 0 (Ambos negativos)
+            elif val_a < 0 and val_b < 0:
+                ln_abs_a = math_c.log_em_c(ctypes.c_double(constantes["e"]), ctypes.c_double(val_a))
+                ln_abs_b = math_c.log_em_c(ctypes.c_double(constantes["e"]), ctypes.c_double(val_b))
+                print(f"[DEBUG main.py]: Ambos negativos: ({ln_abs_b:.10f} + (2k+1) i pi) / ({ln_abs_a:.10f} + (2m+1) i pi)")
+                await channel.send(f"Calculado: o log de {b} na base {a} é: **({ln_abs_b:.10f} + (2k+1) i pi) / ({ln_abs_a:.10f} + (2m+1) i pi)**, onde k, m pertencem aos inteiros e i = sqrt(-1)")
+
 
         elif operacao == "ln":
             a = args[0]
@@ -171,7 +198,10 @@ async def processar_comando_math(channel, operacao: str, args: list):
             print(f"[DEBUG main.py]: Executando função em C para ln: log_em_c({val_e}, {val_a})")
             resultado = math_c.log_em_c(ctypes.c_double(val_e), ctypes.c_double(val_a))
             print(f"[DEBUG main.py]: Operação ln concluída. Resultado: {resultado}")
-            if resultado == 124123.2314:
+            if val_a < 0:
+                print(f"Logaritimando negativo, utilizando solucao imaginaria: {resultado:.10f} + 2k pi, k pertencente aos inteiros e i = sqrt(-1)")
+                await channel.send(f" Calculado: o ln de {a} é: **{resultado:.10f}** + (2k+1) i pi, onde k pertencente aos inteiros e i = sqrt(-1)")
+            elif resultado == 124123.2314:
                 print("[DEBUG main.py]: Erro de restrição matemática retornado pela função log_em_c (ln).")
                 await channel.send("Erro matemático: O logaritmando deve ser > 0.")
             else:

@@ -151,9 +151,19 @@ EXPORT double potencia_em_c(double a, int b) {
 EXPORT double log_em_c(double a, double b) {
     printf("[DEBUG math.dll]: log_em_c recebido | a = %f, b = %f\n", a, b);
     fflush(stdout);
-    double res;
-    if (b <= 0.0 || a <= 0.0 || a == 1.0) res = 124123.2314;
-    else res = ln_em_c(b) / ln_em_c(a);
+
+    // Converte para os valores absolutos para calcular a parte real do logaritmo
+    double abs_a = (a < 0.0) ? -a : a;
+    double abs_b = (b < 0.0) ? -b : b;
+
+    // Erro matematicos (|a| > 0, |a| != 1, |b| > 0)
+    if (abs_a <= 0.0 || abs_a == 1.0 || abs_b <= 0.0) {
+        printf("[DEBUG math.dll]: log_em_c retorno | result = 124123.2314\n");
+        fflush(stdout);
+        return 124123.2314;
+    }
+
+    double res = ln_em_c(abs_b) / ln_em_c(abs_a);
 
     printf("[DEBUG math.dll]: log_em_c retorno | result = %f\n", res);
     fflush(stdout);
