@@ -12,7 +12,10 @@ print("[DEBUG main.py]: Iniciando carregamento do bot e variáveis de ambiente..
 load_dotenv(find_dotenv())
 
 raiz = Path(__file__).parent.parent.parent
-path_math_c = raiz / "C" / "bot_engine_math" / "cmake-build-debug" / "libbot_engine_math.dll"
+
+# Define a extensão da biblioteca conforme o sistema operacional (.dll no Windows, .so no Linux)
+extensao_lib = ".dll" if sys.platform.startswith("win") else ".so"
+path_math_c = raiz / "C" / "bot_engine_math" / "cmake-build-debug" / f"libbot_engine_math{extensao_lib}"
 
 print(f"[DEBUG main.py]: Carregando biblioteca C no caminho: {path_math_c}")
 math_c = ctypes.CDLL(path_math_c)
