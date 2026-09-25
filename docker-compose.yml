@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  discord-bot:
+    build: .
+    container_name: math_discord_bot
+    restart: always
+    env_file:
+      - .env
